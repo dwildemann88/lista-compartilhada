@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tela de Login</title>
+    <link rel="stylesheet" href="TelLogin.css"> <!-- Link para o arquivo CSS -->
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="login">Login</label>
+                <input type="text" id="login" name="login" required>
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" id="senha" name="senha" required>
+            </div>
+            <div class="form-group switch-group">
+                <span class="switch-label">Lembre de mim</span> <!-- Texto -->
+                <label class="switch">
+                    <input type="checkbox" id="lembrar" name="lembrar">
+                    <span class="slider"></span>
+                </label>
+            </div>
+                    
+            <div class="links">
+                <a href="#" class="link">Esqueceu a Senha?</a>
+                <a href="#" class="link">Cadastre-se</a>
+            </div>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o envio do formulário tradicional
+
+            const login = document.getElementById('login').value;
+            const senha = document.getElementById('senha').value;
+            const lembrar = document.getElementById('lembrar').checked;
+
+            // Criando o objeto com os dados de login
+            const userData = {
+                login: login,
+                senha: senha,
+                lembrar: lembrar
+            };
+
+            // Enviando dados para a API de login (backend)
+            fetch('http://localhost:4000/api/users/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === 'Usuário logado com sucesso!') {
+                    // Login bem-sucedido, redirecionar para a página principal ou dashboard
+                    window.location.href = 'dashboard.html'; // Exemplo de redirecionamento
+                } else {
+                    // Exibir erro de login
+                    alert('Falha no login! Verifique suas credenciais.');
+                }
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+                alert('Ocorreu um erro ao tentar realizar o login.');
+            });
+        });
+    </script>
+</body>
+</html>
